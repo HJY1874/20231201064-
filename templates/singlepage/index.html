@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单页应用示例 - 侯靖宇20231201064</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        button {
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-height: 200px;
+            line-height: 1.6;
+        }
+        .info {
+            background-color: #e7f3ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #007bff;
+        }
+    </style>
+    <script>
+        // When back arrow is clicked, show previous section
+        window.onpopstate = function(event) {
+            console.log('返回按钮点击，显示部分:', event.state.section);
+            showSection(event.state.section);
+        }
+
+        function showSection(section) {
+            // Find section text from server
+            fetch(`/sections/${section}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('网络响应不正常');
+                    }
+                    return response.text();
+                })
+                .then(text => {
+                    // Log text and display on page
+                    console.log('获取到的内容:', text);
+                    document.querySelector('#content').innerHTML = text;
+                    
+                    // 更新页面标题显示当前部分
+                    document.title = `单页应用 - 第${section}部分 - 侯靖宇20231201064`;
+                })
+                .catch(error => {
+                    console.error('获取内容时出错:', error);
+                    document.querySelector('#content').innerHTML = 
+                        '<p style="color: red;">加载内容时出错，请检查网络连接。</p>';
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add button functionality
+            document.querySelectorAll('button').forEach(button => {
+                button.onclick = function() {
+                    const section = this.dataset.section;
+                    console.log('按钮点击，显示部分:', section);
+                    
+                    // Add the current state to the history
+                    history.pushState({section: section}, "", `section${section}`);
+                    
+                    showSection(section);
+                };
+            });
+            
+            // 初始加载第一部分内容
+            showSection(1);
+            history.replaceState({section: 1}, "", "section1");
+        });
+    </script>
+</head>
+<body>
+    <h1>单页应用示例 - 侯靖宇20231201064</h1>
+    
+    <div class="info">
+        <strong>功能说明：</strong> 这是一个使用Django、AJAX和JavaScript History API的单页应用示例。
+        点击下方按钮可以动态加载不同部分的内容，而无需刷新整个页面。
+    </div>
+    
+    <div class="button-container">
+        <button data-section="1">第一部分</button>
+        <button data-section="2">第二部分</button>
+        <button data-section="3">第三部分</button>
+    </div>
+    
+    <div id="content">
+        <p>正在加载内容...</p>
+    </div>
+</body>
+</html>
