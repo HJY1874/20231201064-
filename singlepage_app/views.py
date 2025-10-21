@@ -9,9 +9,9 @@ def index(request):
 # The texts are much longer in reality, but have
 # been shortened here to save space
 texts = [
-    "这是第一部分的内容。在实际应用中，这部分内容可能会更长，包含更多的文本信息。",
-    "这是第二部分的内容。这部分展示了如何使用AJAX技术从服务器动态加载内容。",
-    "这是第三部分的内容。这里演示了JavaScript History API的使用，可以更新URL而不刷新页面。"
+    "侯靖宇+20231201064",
+    "侯靖宇+20231201064",
+    "侯靖宇+20231201064"
 ]
 
 def section(request, num):
